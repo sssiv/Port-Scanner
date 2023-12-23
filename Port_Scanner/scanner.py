@@ -7,7 +7,8 @@ import threading
 from queue import Queue
 
 # Default Gateway
-target = input("Enter Target: ")
+subnet = '192.168.'
+target = subnet + input(f"Enter Target from subnet \"{subnet}x.x\": ")
 
 # Desired Port range
 port_range = input("Enter Port Range: ")
@@ -53,7 +54,18 @@ def worker():
     while not queue.empty():
         port = queue.get()
         if portscan(port):
-            print(f"Port {port} is open")
+            match port:
+                case 7: print(f"Echo ({port}) is open")
+                case 22: print(f"SSH/SCP ({port}) is open")
+                case 23: print(f"Telnet, no security ({port}) is open")
+                case 25: print(f"SMTP ({port}) is open")
+                case 53: print(f"SMTP ({port}) is open")
+                case 67: print(f"DHCP/BOOTP ({port}) is open")
+                case 68: print(f"DHCP/BOOTP ({port}) is open")
+                case 80: print(f"DNS ({port}) is open")
+                case 143: print(f"IMAP4 ({port}) is open")
+                case 443: print(f"HTTPS via SSL ({port}) is open")
+                case _: print(f"Port {port} is open")
             open_ports.append(port)
 
 
@@ -79,4 +91,4 @@ for thread in thread_list:
     thread.join()
 
 # Display Open ports
-print("Open ports are ", open_ports)
+print("Open ports:", open_ports)
